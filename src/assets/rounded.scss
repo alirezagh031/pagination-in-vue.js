@@ -1,0 +1,94 @@
+@use 'sass:math';
+
+// Define your sizes with their corresponding values
+$sizes-map: (
+    none: -9999,
+    xs: -2,
+    sm: -1,
+    md: 0,
+    "": 0,
+    lg: 1,
+    xl: 2,
+    circle: 9999,
+    full: 9999
+);
+
+// Define a coefficient to scale the size values
+$coefficient: 0.35rem;
+
+// Function to compute the border-radius based on the size value and coefficient
+@function compute-border-radius($size-value) {
+    @return math.pow(1.618, $size-value) * $coefficient;
+}
+
+// Extract the size names from the sizes map
+$sizes: map-keys($sizes-map);
+
+// Define the statuses
+$statuses: (
+    "",
+    "t",
+    "r",
+    "b",
+    "l",
+    "s",
+    "e",
+    "tr",
+    "tl",
+    "br",
+    "bl",
+    "ss",
+    "se",
+    "ee",
+    "es"
+);
+
+// Map statuses to their corresponding CSS border-radius properties
+$status-properties: (
+    "": (border-radius),
+    "t": (border-top-left-radius, border-top-right-radius),
+    "r": (border-top-right-radius, border-bottom-right-radius),
+    "b": (border-bottom-right-radius, border-bottom-left-radius),
+    "l": (border-top-left-radius, border-bottom-left-radius),
+    "tr": (border-top-right-radius),
+    "tl": (border-top-left-radius),
+    "br": (border-bottom-right-radius),
+    "bl": (border-bottom-left-radius),
+    "s": (border-start-start-radius, border-end-start-radius),
+    "e": (border-start-end-radius, border-end-end-radius),
+    "ss": (border-start-start-radius),
+    "se": (border-start-end-radius),
+    "ee": (border-end-end-radius),
+    "es": (border-end-start-radius)
+);
+
+// Loop over each size and status to generate the CSS classes
+@each $size-name in $sizes {
+    @each $status in $statuses {
+        $size-value: map-get($sizes-map, $size-name);
+        $computed-radius: compute-border-radius($size-value);
+        $class-name: 'roundedd';
+
+        @if $status !="" {
+            $class-name: $class-name + '-' + $status;
+        }
+
+        @if $size-name !="md" {
+            $class-name: $class-name + '-' + $size-name;
+        }
+
+        .#{$class-name} {
+            $properties: map-get($status-properties, $status);
+
+            @if $properties ==null {
+                $properties: (
+                    border-radius
+                );
+        }
+
+        @each $property in $properties {
+            #{$property}: $computed-radius;
+        }
+    }
+}
+}
