@@ -1,0 +1,24 @@
+@use 'sass:math';
+$sizes-map:(
+    sm: 30,
+    md: 45,
+    "": 45,
+    lg: 55,
+    xl: 65 
+);
+
+$sizes: map-keys($sizes-map);
+
+
+@each $size-name in $sizes {
+    $size-value: map-get($sizes-map, $size-name );
+    $class-name: 'size';
+
+    $class-name: $class-name + '-' + $size-name;
+
+    .#{$class-name} {
+        width: #{$size-value}px !important;
+        height: #{$size-value}px !important;
+        font-size: #{math.div($size-value, 3)}px !important;
+    }
+}
