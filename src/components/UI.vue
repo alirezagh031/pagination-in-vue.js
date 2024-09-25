@@ -13,11 +13,8 @@
                 v-if="showDefaultSuperPrev"
                 :icon="'mdi-chevron-double-'+ iconNameStart"
                 :style="{ backgroundColor: activeColor || '',
-                          color : activeTextColor || '',
-                          width : getSize(size) + 'px',
-                          height : getSize(size) + 'px',
-                          fontSize : getSize(size) / 3 + 'px'}"
-                :class="getBorderRadiusSize(borderRadiusSize)"
+                          color : activeTextColor || ''}"
+                :class="[getBorderRadiusSize(borderRadiusSize), getSize(size)]"
                 :disabled="disabled"
               ></v-btn>
           </template>
@@ -27,11 +24,8 @@
                 v-if="showDefaultPrev"
                 :icon="'mdi-chevron-' + iconNameStart" 
                 :style="{ backgroundColor: activeColor || '',
-                          color : activeTextColor || '',
-                          width : getSize(size) + 'px',
-                          height : getSize(size) + 'px',
-                          fontSize : getSize(size) / 3 + 'px'}"
-                :class="getBorderRadiusSize(borderRadiusSize)"
+                          color : activeTextColor || ''}"
+                :class="[getBorderRadiusSize(borderRadiusSize), getSize(size)]"
                 :disabled="disabled"
               ></v-btn>
           </template>
@@ -40,15 +34,12 @@
             <div v-if="isCurrentPage && showDefaultPagination"
             class="cursor-pointer elevation-1"
             :style="{ backgroundColor: isActive ? activeColor || '' : onActiveColor || '',
-              color: isActive ? activeTextColor || '' : onActiveTextColor || '',
-              
-              width : getSize(size) + 'px',
-              height : getSize(size) + 'px',
-              fontSize : getSize(size) / 3 + 'px'
+              color: isActive ? activeTextColor || '' : onActiveTextColor || ''
             }"
             :class="[
               isActive ? 'currentPageNumber' : 'pageNumber',
-              getBorderRadiusSize(borderRadiusSize)
+              getBorderRadiusSize(borderRadiusSize),
+              getSize(size)
             ]">
               {{ page }}
             </div>
@@ -60,11 +51,8 @@
               v-if="showDefaultNext"
               :icon="'mdi-chevron-' + iconNameEnd"
               :style="{ backgroundColor: activeColor || '',
-                        color : activeTextColor || '',
-                        width : getSize(size) + 'px',
-                        height : getSize(size) + 'px',
-                        fontSize : getSize(size) / 3 + 'px'}"
-              :class="getBorderRadiusSize(borderRadiusSize)"
+                        color : activeTextColor || ''}"
+              :class="[getBorderRadiusSize(borderRadiusSize), getSize(size)]"
               :disabled="disabled"
             ></v-btn>
           </template>
@@ -74,11 +62,8 @@
               v-if="showDefaultSuperNext"
               :icon="'mdi-chevron-double-' + iconNameEnd"
               :style="{ backgroundColor: activeColor || '',
-                        color : activeTextColor || '',
-                        width : getSize(size) + 'px',
-                        height : getSize(size) + 'px',
-                        fontSize : getSize(size) / 3 + 'px'}"
-              :class="getBorderRadiusSize(borderRadiusSize)"
+                        color : activeTextColor || ''}"
+              :class="[getBorderRadiusSize(borderRadiusSize), getSize(size)]"
               :disabled="disabled"
             ></v-btn>
           </template>
@@ -89,12 +74,9 @@
               :value="searchPage"
               @input="handleInput"
               :style="{ backgroundColor: onActiveColor || '',
-                        color : onActiveTextColor || '',
-                        width : getSize(size) + 'px',
-                        height : getSize(size) + 'px',
-                        fontSize : getSize(size) / 3 + 'px'}"
+                        color : onActiveTextColor || ''}"
                         class="searchPage elevation-1"
-              :class="getBorderRadiusSize(borderRadiusSize)"
+              :class="[getBorderRadiusSize(borderRadiusSize), getSize(size)]"
             />
           </template>
           <template #searchPageBtn="{enabled}">
@@ -103,11 +85,8 @@
               v-if="showDefaultsearchPageBtn && enabled"
               :icon="'mdi-magnify'"
               :style="{ backgroundColor: activeColor || '',
-                        color : activeTextColor || '',
-                        width : getSize(size) + 'px',
-                        height : getSize(size) + 'px',
-                        fontSize : getSize(size) / 3 + 'px'}"
-              :class="getBorderRadiusSize(borderRadiusSize)"
+                        color : activeTextColor || ''}"
+              :class="[getBorderRadiusSize(borderRadiusSize), getSize(size)]"
             ></v-btn>
           </template>
         </pagination>
@@ -118,8 +97,9 @@
   <script setup lang="ts">
     import { computed, defineProps, withDefaults, useSlots, defineEmits, defineOptions } from 'vue';
     import pagination from '@/components/Pagination.vue';
-    import { roundedClassName } from '@/composables/composable.ts'
-    import '@/assets/rounded.scss'    
+    import { roundedClassName, sizeClassName } from '@/composables/composable.ts'
+    import '@/assets/rounded.scss'  
+    import '@/assets/size.scss'
 
     export interface Props {
         // pageSize: number;
@@ -143,7 +123,8 @@
         onActiveColor : undefined,
         activeTextColor : undefined,
         onActiveTextColor : undefined,
-        borderRadiusSize : 'circle'
+        borderRadiusSize : 'circle',
+        size: 'md'
     });
     defineOptions({
       inheritAttrs: false
@@ -180,20 +161,15 @@
       let class_name = roundedClassName(size);
       return class_name;
     };
-  const getSize = (size: 'sm' | 'lg' | 'xl' ): number => {
-    switch (size) {
-      case 'sm':
-        return 30;
-      case 'lg':
-        return 45;
-      case 'xl':
-        return 70;
-    }
-  };
+    const getSize = (size: 'sm' | 'md' | '' | 'lg' | 'xl' ): string => {
+      let class_name = sizeClassName(size);
+      return class_name;
+    };
   </script>
 
   <style scoped>
     @import '@/assets/rounded.scss';
+    @import '@/assets/size.scss';
     .searchPage {
       text-align: center;
       display: flex;
