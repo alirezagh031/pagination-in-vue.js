@@ -12,9 +12,7 @@
               <v-btn 
                 v-if="showDefaultSuperPrev"
                 :icon="'mdi-chevron-double-'+ iconNameStart"
-                :style="{ backgroundColor: activeColor || '',
-                          color : activeTextColor || ''}"
-                :class="[getBorderRadiusSize(borderRadiusSize), getSize(size)]"
+                :class="[getBorderRadiusSize(borderRadiusSize), getSize(size), getColor(activeTextColor), getBgColor(activeColor)]"
                 :disabled="disabled"
               ></v-btn>
           </template>
@@ -23,9 +21,7 @@
               <v-btn 
                 v-if="showDefaultPrev"
                 :icon="'mdi-chevron-' + iconNameStart" 
-                :style="{ backgroundColor: activeColor || '',
-                          color : activeTextColor || ''}"
-                :class="[getBorderRadiusSize(borderRadiusSize), getSize(size)]"
+                :class="[getBorderRadiusSize(borderRadiusSize), getSize(size), getColor(activeTextColor), getBgColor(activeColor)]"
                 :disabled="disabled"
               ></v-btn>
           </template>
@@ -33,26 +29,23 @@
             <slot name="default" :isCurrentPage="isCurrentPage" :isActive="isActive" :page="page"></slot>
             <div v-if="isCurrentPage && showDefaultPagination"
             class="cursor-pointer elevation-1"
-            :style="{ backgroundColor: isActive ? activeColor || '' : onActiveColor || '',
-              color: isActive ? activeTextColor || '' : onActiveTextColor || ''
-            }"
             :class="[
               isActive ? 'currentPageNumber' : 'pageNumber',
               getBorderRadiusSize(borderRadiusSize),
-              getSize(size)
+              getSize(size),
+              getBgColor(isActive ? activeColor : onActiveColor),
+              getColor(isActive ? activeTextColor : onActiveTextColor)
             ]">
               {{ page }}
             </div>
-            <span v-if="page === -1 && showDefaultPagination" class="dot mx-2">...</span>
+            <span v-if="page === -1 && showDefaultPagination" class="dot mx-2" :class="getColor(activeColor)">...</span>
           </template>
           <template #next="{disabled}">
             <slot name="next" :disabled="disabled" :rtl="rtl"></slot>
             <v-btn 
               v-if="showDefaultNext"
               :icon="'mdi-chevron-' + iconNameEnd"
-              :style="{ backgroundColor: activeColor || '',
-                        color : activeTextColor || ''}"
-              :class="[getBorderRadiusSize(borderRadiusSize), getSize(size)]"
+              :class="[getBorderRadiusSize(borderRadiusSize), getSize(size), getColor(activeTextColor), getBgColor(activeColor)]"
               :disabled="disabled"
             ></v-btn>
           </template>
@@ -61,9 +54,7 @@
             <v-btn 
               v-if="showDefaultSuperNext"
               :icon="'mdi-chevron-double-' + iconNameEnd"
-              :style="{ backgroundColor: activeColor || '',
-                        color : activeTextColor || ''}"
-              :class="[getBorderRadiusSize(borderRadiusSize), getSize(size)]"
+              :class="[getBorderRadiusSize(borderRadiusSize), getSize(size), getColor(activeTextColor), getBgColor(activeColor)]"
               :disabled="disabled"
             ></v-btn>
           </template>
@@ -73,10 +64,8 @@
               v-if="showDefaultsearchPageInput && enabled"
               :value="searchPage"
               @input="handleInput"
-              :style="{ backgroundColor: onActiveColor || '',
-                        color : onActiveTextColor || ''}"
-                        class="searchPage elevation-1"
-              :class="[getBorderRadiusSize(borderRadiusSize), getSize(size)]"
+              class="searchPage elevation-1"
+              :class="[getBorderRadiusSize(borderRadiusSize), getSize(size), getColor(onActiveTextColor), getBgColor(onActiveColor)]"
             />
           </template>
           <template #searchPageBtn="{enabled}">
@@ -84,9 +73,7 @@
             <v-btn 
               v-if="showDefaultsearchPageBtn && enabled"
               :icon="'mdi-magnify'"
-              :style="{ backgroundColor: activeColor || '',
-                        color : activeTextColor || ''}"
-              :class="[getBorderRadiusSize(borderRadiusSize), getSize(size)]"
+              :class="[getBorderRadiusSize(borderRadiusSize), getSize(size), getColor(activeTextColor), getBgColor(activeColor)]"
             ></v-btn>
           </template>
         </pagination>
@@ -97,10 +84,10 @@
   <script setup lang="ts">
     import { computed, defineProps, withDefaults, useSlots, defineEmits, defineOptions } from 'vue';
     import pagination from '@/components/Pagination.vue';
-    import { roundedClassName, sizeClassName } from '@/composables/composable.ts'
-    import '@/assets/rounded.scss'  
+    import { colorClassName, roundedClassName, sizeClassName, bgColorClassName } from '@/composables/composable.ts'
+    import '@/assets/rounded.scss'
     import '@/assets/size.scss'
-
+    import '@/assets/color.scss'
     export interface Props {
         // pageSize: number;
         // startCountPageShow?: number;
@@ -110,8 +97,8 @@
         onActiveColor : string;
         activeTextColor : string;
         onActiveTextColor : string;
-        borderRadiusSize : 'sm' | 'lg' | 'xl' | 'circle';
-        size : 'sm' | 'lg' | 'xl' ;
+        borderRadiusSize : 'none' | 'xs' | 'sm' | 'lg' | '' | 'md' | 'xl' | 'circle';
+        size : 'sm' | 'md' | '' | 'lg' | 'xl' | 'xs' ;
         modelValue?: number;
         searchPage? : number
         rtl: boolean;
@@ -119,12 +106,12 @@
 
     const props = withDefaults(defineProps<Props>(), {
         rtl:true,
-        activeColor : undefined,
-        onActiveColor : undefined,
-        activeTextColor : undefined,
-        onActiveTextColor : undefined,
+        activeColor : 'blue-grey-darken-4',
+        onActiveColor : 'blue-lighten-5',
+        activeTextColor : 'white',
+        onActiveTextColor : 'black',
         borderRadiusSize : 'circle',
-        size: 'md'
+        size: 'md',
     });
     defineOptions({
       inheritAttrs: false
@@ -157,29 +144,35 @@
         target.value = numericValue;
       }
     };
-    const getBorderRadiusSize = (size: 'sm' | 'lg' | 'xl' | 'circle'): string => {
+    const getBorderRadiusSize = (size: 'none' | 'xs' | 'sm' | 'lg' | '' | 'md' | 'xl' | 'circle'): string => {
       let class_name = roundedClassName(size);
       return class_name;
     };
-    const getSize = (size: 'sm' | 'md' | '' | 'lg' | 'xl' ): string => {
+    const getSize = (size: 'sm' | 'md' | '' | 'lg' | 'xl' | 'xs'): string => {
       let class_name = sizeClassName(size);
       return class_name;
     };
+    const getColor = (color: string ): string => {
+      let class_name = colorClassName(color);
+      return class_name;
+    };
+    const getBgColor = (color: string ): string => {
+      let class_name = bgColorClassName(color);
+      return class_name;
+    };
+    console.log(getBgColor(props.activeColor));
   </script>
 
   <style scoped>
     @import '@/assets/rounded.scss';
     @import '@/assets/size.scss';
+    @import '@/assets/color.scss';
     .searchPage {
       text-align: center;
       display: flex;
       justify-content: center;
       align-items: center;
       outline: none;
-      background-color: rgb(234, 248, 253);
-      color: black;
-      width: 48px;
-      height: 48px;
     }
     .pagination-container {
       display: flex;
@@ -193,35 +186,6 @@
       gap: 1rem;
     }
     .pageNumber{
-      width: 48px;
-      height: 48px;
-      background-color: rgb(234, 248, 253);
-      color: black;
-      text-align: center;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-      
-    }
-    .pageNumber:hover{
-      background-color: rgb(216, 243, 255);
-    }
-    .v-btn {
-      width: 40px; 
-      height: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .currentPageNumber {
-      width: 48px;
-      height: 48px;
-      background-color: rgb(39, 39, 39);
-      color: white;
       text-align: center;
       display: flex;
       justify-content: center;
@@ -230,13 +194,25 @@
       -moz-user-select: none;
       -ms-user-select: none;
       user-select: none;
+      
     }
-    .currentPageNumber:hover{
-      background-color: rgb(54, 54, 54);
+    .v-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
+    .currentPageNumber {
+      text-align: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    } 
 
     .dot{
-      color: black;
       -webkit-user-select: none; 
       -moz-user-select: none;
       -ms-user-select: none;
