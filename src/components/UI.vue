@@ -84,34 +84,24 @@
   <script setup lang="ts">
     import { computed, defineProps, withDefaults, useSlots, defineEmits, defineOptions } from 'vue';
     import pagination from '@/components/Pagination.vue';
-    import { colorClassName, roundedClassName, sizeClassName, bgColorClassName } from '@/composables/composable.ts'
+    import { colorClassName, roundedClassName, bgColorClassName } from '@/composables/composable.ts'
+    import { createSizeProp, useSize } from '@/composables/SizeProps'
     import '@/assets/rounded.scss'
     import '@/assets/size.scss'
     import '@/assets/color.scss'
-    export interface Props {
-        // pageSize: number;
-        // startCountPageShow?: number;
-        // endCountPageShow?: number;
-        // insideOfActivePageShow?: number;
-        activeColor : string;
-        onActiveColor : string;
-        activeTextColor : string;
-        onActiveTextColor : string;
-        borderRadiusSize : 'none' | 'xs' | 'sm' | 'lg' | '' | 'md' | 'xl' | 'circle';
-        size : 'sm' | 'md' | '' | 'lg' | 'xl' | 'xs' ;
-        modelValue?: number;
-        searchPage? : number
-        rtl: boolean;
-      }
-
-    const props = withDefaults(defineProps<Props>(), {
-        rtl:true,
-        activeColor : 'blue-grey-darken-4',
-        onActiveColor : 'blue-lighten-5',
-        activeTextColor : 'white',
-        onActiveTextColor : 'black',
-        borderRadiusSize : 'circle',
-        size: 'md',
+    const props = defineProps({
+      activeColor: { type: String, default: 'blue-grey-darken-4' },
+      onActiveColor: { type: String, default: 'blue-lighten-5' },
+      activeTextColor: { type: String, default: 'white' },
+      onActiveTextColor: { type: String, default: 'black' },
+      borderRadiusSize: { 
+        type: String as () => 'none' | 'xs' | 'sm' | 'lg' | '' | 'md' | 'xl' | 'circle', 
+        default: 'circle' 
+      },
+      ...createSizeProp('md'),  // Ensure you call the function here
+      modelValue: { type: Number, required: false },
+      searchPage: { type: Number, required: false },
+      rtl: { type: Boolean, default: true },
     });
     defineOptions({
       inheritAttrs: false
@@ -149,7 +139,7 @@
       return class_name;
     };
     const getSize = (size: 'sm' | 'md' | '' | 'lg' | 'xl' | 'xs'): string => {
-      let class_name = sizeClassName(size);
+      let class_name = useSize(size);
       return class_name;
     };
     const getColor = (color: string ): string => {
