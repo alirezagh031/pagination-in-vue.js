@@ -32,24 +32,14 @@
     defineProps,
   } from "vue";
   
-  export interface Props {
-    pageSize: number;
-    startCountPageShow?: number;
-    endCountPageShow?: number;
-    insideOfActivePageShow?: number;
-    modelValue?: number;
-    searchPage? : number;
-    enableSearchPage : boolean;
-  }
-  
-  const props = withDefaults(defineProps<Props>(), {
-    modelValue: 1,
-    pageSize: 20,
-    endCountPageShow: 2,
-    startCountPageShow: 2,
-    insideOfActivePageShow: 1,
-    enableSearchPage : true,
-    searchPage : undefined,
+  const props = defineProps({
+    pageSize: { type: Number, default: 20 },
+    startCountPageShow: { type: Number, default: 2 },
+    endCountPageShow: { type: Number, default: 2 },
+    insideOfActivePageShow: { type: Number, default: 1 },
+    modelValue: { type: Number, default: 1 },
+    searchPage: { type: Number, default: undefined },
+    enableSearchPage: { type: Boolean, default: true },
   });
   const emit = defineEmits([
     "update:modelValue",
