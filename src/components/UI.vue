@@ -34,7 +34,8 @@
             getBorderRadiusSize(borderRadiusSize),
             getSize(size),
             getBgColor(isActive ? activeColor : onActiveColor),
-            getColor(isActive ? activeTextColor : onActiveTextColor)
+            getColor(isActive ? activeTextColor : onActiveTextColor),
+            getBorder(borderSize, borderStyle)
           ]">
             {{ page }}
           </div>
@@ -64,8 +65,8 @@
             v-if="showDefaultsearchPageInput && enabled"
             :value="searchPage"
             @input="handleInput"
-            class="searchPage elevation-1"
-            :class="[getBorderRadiusSize(borderRadiusSize), getSize(size), getColor(onActiveTextColor), getBgColor(onActiveColor)]"
+            class="searchPage "
+            :class="[getBorderRadiusSize(borderRadiusSize), getSize(size), getColor(onActiveTextColor), getBgColor(onActiveColor), getBorder(borderSize, borderStyle)]"
           />
         </template>
         <template #searchPageBtn="{enabled}">
@@ -73,7 +74,7 @@
           <v-btn 
             v-if="showDefaultsearchPageBtn && enabled"
             :icon="'mdi-magnify'"
-            :class="[getBorderRadiusSize(borderRadiusSize), getSize(size), getColor(activeTextColor), getBgColor(activeColor)]"
+            :class="[getBorderRadiusSize(borderRadiusSize), getSize(size), getColor(activeTextColor), getBgColor(activeColor), getBorder(borderSize, borderStyle)]"
           ></v-btn>
         </template>
       </pagination>
@@ -82,14 +83,16 @@
 </template>
   
 <script setup lang="ts">
-  import { computed, defineProps, useSlots, defineEmits, defineOptions } from 'vue';
+  import { computed, defineProps, useSlots, defineEmits, defineOptions, onMounted } from 'vue';
   import pagination from '@/components/Pagination.vue';
   import { colorClassName, bgColorClassName } from '@/composables/composable'
   import { createSizeProp, useSize } from '@/composabless/SizeProps'
   import { createRoundedProp, useRounded } from '@/composabless/RoundedProps'
-  import '@/assets/rounded.scss'
-  import '@/assets/size.scss'
+  import '@/assets/rounded'
+  import '@/assets/size'
   import '@/assets/color.scss'
+import { applyDynamicClass } from '@/assets/border/borderWidth';
+import { createBorderProp, useBorder } from '@/composabless/BorderProps';
   const props = defineProps({
       activeColor: { type: String, default: 'blue-grey-darken-4' },
       onActiveColor: { type: String, default: 'blue-lighten-5' },
@@ -97,6 +100,7 @@
       onActiveTextColor: { type: String, default: 'black' },
       ...createRoundedProp(),
       ...createSizeProp(),
+      ...createBorderProp(),
       modelValue: { type: Number, required: false },
       searchPage: { type: Number, required: false },
       rtl: { type: Boolean, default: true },
@@ -148,12 +152,17 @@
     let class_name = bgColorClassName(color);
     return class_name;
   };
-  console.log(getBgColor(props.activeColor));
+  const getBorder = (borderSize : string | 'none' | 'sm' | 'md' | '' | 'lg' | 'xl', borderStyle : string | 'solid' | 'dashed' | 'dotted' | 'double' | 'hidden' | 'none'): string => {
+    let class_name = useBorder(borderSize, borderStyle);
+    return class_name;
+  };
+  onMounted(() => {
+    applyDynamicClass();
+  })
+  
 </script>
 
 <style scoped>
-  @import '@/assets/rounded.scss';
-  @import '@/assets/size.scss';
   @import '@/assets/color.scss';
   .searchPage {
     text-align: center;
