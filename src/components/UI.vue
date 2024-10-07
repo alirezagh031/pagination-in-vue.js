@@ -93,6 +93,7 @@
   import '@/assets/color.scss'
 import { applyDynamicClass } from '@/assets/border/borderWidth';
 import { createBorderProp, useBorder } from '@/composabless/BorderProps';
+  import { uiSlots } from '@/components/slots'
   const props = defineProps({
       activeColor: { type: String, default: 'blue-grey-darken-4' },
       onActiveColor: { type: String, default: 'blue-lighten-5' },
@@ -105,6 +106,7 @@ import { createBorderProp, useBorder } from '@/composabless/BorderProps';
       searchPage: { type: Number, required: false },
       rtl: { type: Boolean, default: true },
   });
+  const slots = defineSlots<uiSlots>();
   defineOptions({
     inheritAttrs: false
   });
