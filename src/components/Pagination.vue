@@ -30,8 +30,9 @@
     withDefaults,
     computed,
     defineProps,
+    defineSlots
   } from "vue";
-  
+  import { paginationSlots } from '@/components/slots';
   const props = defineProps({
     pageSize: { type: Number, default: 20 },
     startCountPageShow: { type: Number, default: 2 },
@@ -41,6 +42,9 @@
     searchPage: { type: Number, default: undefined },
     enableSearchPage: { type: Boolean, default: true },
   });
+  
+  const slots = defineSlots<paginationSlots>()
+  
   const emit = defineEmits([
     "update:modelValue",
     "update:searchPage"
