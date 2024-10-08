@@ -44,7 +44,8 @@
     enableSearchPage: { type: Boolean, default: true },
   });
   
-  const slots = defineSlots<paginationSlots>()
+  const slots = defineSlots<paginationSlots>();
+  const props = defineProps(paginationProps);
   
   const emit = defineEmits([
     "update:modelValue",
