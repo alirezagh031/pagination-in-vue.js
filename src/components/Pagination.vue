@@ -33,6 +33,7 @@
     defineSlots
   } from "vue";
   import { paginationSlots } from '@/components/slots';
+  import { paginationProps } from "@/component/props";
   const props = defineProps({
     pageSize: { type: Number, default: 20 },
     startCountPageShow: { type: Number, default: 2 },
