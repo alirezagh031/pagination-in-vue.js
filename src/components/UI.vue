@@ -94,6 +94,7 @@
 import { applyDynamicClass } from '@/assets/border/borderWidth';
 import { createBorderProp, useBorder } from '@/composabless/BorderProps';
   import { uiSlots } from '@/components/slots'
+  import { uiProps } from '@/components/props';
   const props = defineProps({
       activeColor: { type: String, default: 'blue-grey-darken-4' },
       onActiveColor: { type: String, default: 'blue-lighten-5' },
@@ -107,6 +108,7 @@ import { createBorderProp, useBorder } from '@/composabless/BorderProps';
       rtl: { type: Boolean, default: true },
   });
   const slots = defineSlots<uiSlots>();
+  const props = defineProps(uiProps);
   defineOptions({
     inheritAttrs: false
   });
