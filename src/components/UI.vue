@@ -91,10 +91,12 @@
   import '@/assets/rounded'
   import '@/assets/size'
   import '@/assets/color.scss'
-import { applyDynamicClass } from '@/assets/border/borderWidth';
-import { createBorderProp, useBorder } from '@/composabless/BorderProps';
-  import { uiSlots } from '@/components/slots'
-  import { uiProps } from '@/components/props';
+  import { applyDynamicClass } from '@/assets/border/borderWidth';
+  import { createBorderProp, useBorder } from '@/composabless/BorderProps';
+  import { uiSlots } from '@/components/Slots'
+  import { uiProps } from '@/components/Props';
+  import { paginationEmits } from '@/components/Emits';
+  
   const props = defineProps({
       activeColor: { type: String, default: 'blue-grey-darken-4' },
       onActiveColor: { type: String, default: 'blue-lighten-5' },
@@ -112,7 +114,7 @@ import { createBorderProp, useBorder } from '@/composabless/BorderProps';
   defineOptions({
     inheritAttrs: false
   });
-  const emit = defineEmits(["update:modelValue", "update:searchPage"]);
+  const emit = defineEmits(PaginationEmits);
   const iconNameStart = computed(() => props.rtl ? 'right' : 'left');
   const iconNameEnd = computed(() => props.rtl ? 'left' : 'right');
   const slots = useSlots();
