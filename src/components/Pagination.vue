@@ -33,7 +33,8 @@
     defineSlots
   } from "vue";
   import { paginationSlots } from '@/components/slots';
-  import { paginationProps } from "@/component/props";
+  import { paginationProps } from "@/components/props";
+  import { paginationEmits } from "@/components/emits";
   const props = defineProps({
     pageSize: { type: Number, default: 20 },
     startCountPageShow: { type: Number, default: 2 },
@@ -47,10 +48,7 @@
   const slots = defineSlots<paginationSlots>();
   const props = defineProps(paginationProps);
   
-  const emit = defineEmits([
-    "update:modelValue",
-    "update:searchPage"
-  ]);
+  const emit = defineEmits(paginationEmits);
   const prevPage = () => {
     if (props.modelValue > 1) {
       emit("update:modelValue", props.modelValue - 1);
