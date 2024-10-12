@@ -88,9 +88,6 @@
   import { colorClassName, bgColorClassName } from '@/composables/composable'
   import { createSizeProp, useSize } from '@/composabless/SizeProps'
   import { createRoundedProp, useRounded } from '@/composabless/RoundedProps'
-  import '@/assets/rounded'
-  import '@/assets/size'
-  import '@/assets/color.scss'
   import { applyDynamicClass } from '@/assets/border/borderWidth';
   import { createBorderProp, useBorder } from '@/composabless/BorderProps';
   import { uiSlots } from '@/components/Slots'
@@ -169,7 +166,6 @@
 </script>
 
 <style scoped>
-  @import '@/assets/color.scss';
   .searchPage {
     text-align: center;
     display: flex;
