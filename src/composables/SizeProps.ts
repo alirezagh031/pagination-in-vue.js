@@ -1,4 +1,4 @@
-import { PropType, ref } from 'vue';
+import { PropType, computed } from 'vue';
 
 export function createSizeProp(defaultSize: string = 'md') {
     return {
@@ -8,8 +8,10 @@ export function createSizeProp(defaultSize: string = 'md') {
         }
     };
 }
-export function useSize(size : string | 'sm' | 'md' | '' | 'lg' | 'xl' | 'xs') {
-    const class_name = ref('size-');
-    class_name.value = class_name.value + size;
-    return class_name.value;
+export function useSize(props: { size: string }) {
+    const className = computed(() => {
+        return `size-${props.size}`;
+    });
+    
+    return className;
 }
