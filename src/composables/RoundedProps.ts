@@ -1,4 +1,4 @@
-import { PropType, ref } from 'vue';
+import { computed, PropType } from 'vue';
 
 export function createRoundedProp(defaultSize: string = 'md') {
     return {
@@ -8,8 +8,9 @@ export function createRoundedProp(defaultSize: string = 'md') {
         }
     };
 }
-export function useRounded(size : string | 'none' | 'xs' | 'sm' | 'lg' | '' | 'md' | 'xl' | 'circle') {
-    const class_name = ref('roundedd-');
-    class_name.value = class_name.value + size;
-    return class_name.value;
+export function useRounded(props: {borderRadiusSize: string}) {
+    const className = computed(() => {
+        return `roundedd-${props.borderRadiusSize}`;
+    });
+    return className;
 }
