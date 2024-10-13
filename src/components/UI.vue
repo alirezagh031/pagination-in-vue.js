@@ -12,7 +12,7 @@
             <v-btn 
               v-if="showDefaultSuperPrev"
               :icon="'mdi-chevron-double-'+ iconNameStart"
-              :class="[getBorderRadiusSize(borderRadiusSize), getSize(size), getColor(activeTextColor), getBgColor(activeColor)]"
+              :class="[roundedClass, sizeClass, textColorClass[0], bgColorClass[0]]"
               :disabled="disabled"
             ></v-btn>
         </template>
@@ -21,7 +21,7 @@
             <v-btn 
               v-if="showDefaultPrev"
               :icon="'mdi-chevron-' + iconNameStart" 
-              :class="[getBorderRadiusSize(borderRadiusSize), getSize(size), getColor(activeTextColor), getBgColor(activeColor)]"
+              :class="[roundedClass, sizeClass, textColorClass[0], bgColorClass[0]]"
               :disabled="disabled"
             ></v-btn>
         </template>
@@ -31,22 +31,22 @@
           class="cursor-pointer elevation-1"
           :class="[
             isActive ? 'currentPageNumber' : 'pageNumber',
-            getBorderRadiusSize(borderRadiusSize),
-            getSize(size),
-            getBgColor(isActive ? activeColor : onActiveColor),
-            getColor(isActive ? activeTextColor : onActiveTextColor),
-            getBorder(borderSize, borderStyle)
+            roundedClass,
+            sizeClass,
+            isActive ? bgColorClass[0] : bgColorClass[1],
+            isActive ? textColorClass[0] : textColorClass[1],
+            borderClass
           ]">
             {{ page }}
           </div>
-          <span v-if="page === -1 && showDefaultPagination" class="dot mx-2" :class="getColor(activeColor)">...</span>
+          <span v-if="page === -1 && showDefaultPagination" class="dot mx-2" :class="textColorClass[1]">...</span>
         </template>
         <template #next="{disabled}">
           <slot name="next" :disabled="disabled" :rtl="rtl"></slot>
           <v-btn 
             v-if="showDefaultNext"
             :icon="'mdi-chevron-' + iconNameEnd"
-            :class="[getBorderRadiusSize(borderRadiusSize), getSize(size), getColor(activeTextColor), getBgColor(activeColor)]"
+            :class="[roundedClass, sizeClass, textColorClass[0], bgColorClass[0]]"
             :disabled="disabled"
           ></v-btn>
         </template>
@@ -55,7 +55,7 @@
           <v-btn 
             v-if="showDefaultSuperNext"
             :icon="'mdi-chevron-double-' + iconNameEnd"
-            :class="[getBorderRadiusSize(borderRadiusSize), getSize(size), getColor(activeTextColor), getBgColor(activeColor)]"
+            :class="[roundedClass, sizeClass, textColorClass[0], bgColorClass[0]]"
             :disabled="disabled"
           ></v-btn>
         </template>
@@ -66,7 +66,7 @@
             :value="searchPage"
             @input="handleInput"
             class="searchPage "
-            :class="[getBorderRadiusSize(borderRadiusSize), getSize(size), getColor(onActiveTextColor), getBgColor(onActiveColor), getBorder(borderSize, borderStyle)]"
+            :class="[roundedClass, sizeClass, textColorClass[1], bgColorClass[1], borderClass]"
           />
         </template>
         <template #searchPageBtn="{enabled}">
@@ -74,7 +74,7 @@
           <v-btn 
             v-if="showDefaultsearchPageBtn && enabled"
             :icon="'mdi-magnify'"
-            :class="[getBorderRadiusSize(borderRadiusSize), getSize(size), getColor(activeTextColor), getBgColor(activeColor), getBorder(borderSize, borderStyle)]"
+            :class="[roundedClass, sizeClass, textColorClass[0], bgColorClass[0], borderClass]"
           ></v-btn>
         </template>
       </pagination>
@@ -93,21 +93,13 @@
   import { uiSlots } from '@/components/Slots'
   import { uiProps } from '@/components/Props';
   import { paginationEmits } from '@/components/Emits';
-  
-  const props = defineProps({
-      activeColor: { type: String, default: 'blue-grey-darken-4' },
-      onActiveColor: { type: String, default: 'blue-lighten-5' },
-      activeTextColor: { type: String, default: 'white' },
-      onActiveTextColor: { type: String, default: 'black' },
-      ...createRoundedProp(),
-      ...createSizeProp(),
-      ...createBorderProp(),
-      modelValue: { type: Number, required: false },
-      searchPage: { type: Number, required: false },
-      rtl: { type: Boolean, default: true },
-  });
   const slots = defineSlots<uiSlots>();
   const props = defineProps(uiProps);
+  const sizeClass = useSize(props);
+  const roundedClass = useRounded(props);
+  const textColorClass = colorClassName(props);
+  const bgColorClass = bgColorClassName(props);
+  const borderClass = useBorder(props);
   defineOptions({
     inheritAttrs: false
   });
@@ -138,26 +130,6 @@
       }
       target.value = numericValue;
     }
-  };
-  const getBorderRadiusSize = (size: 'none' | 'xs' | 'sm' | 'lg' | '' | 'md' | 'xl' | 'circle'): string => {
-    let class_name = useRounded(size);
-    return class_name;
-  };
-  const getSize = (size: 'sm' | 'md' | '' | 'lg' | 'xl' | 'xs'): string => {
-    let class_name = useSize(size);
-    return class_name;
-  };
-  const getColor = (color: string ): string => {
-    let class_name = colorClassName(color);
-    return class_name;
-  };
-  const getBgColor = (color: string ): string => {
-    let class_name = bgColorClassName(color);
-    return class_name;
-  };
-  const getBorder = (borderSize : string | 'none' | 'sm' | 'md' | '' | 'lg' | 'xl', borderStyle : string | 'solid' | 'dashed' | 'dotted' | 'double' | 'hidden' | 'none'): string => {
-    let class_name = useBorder(borderSize, borderStyle);
-    return class_name;
   };
   onMounted(() => {
     applyDynamicClass();
