@@ -1,4 +1,4 @@
-import { PropType, ref } from 'vue';
+import { computed, PropType } from 'vue';
 
 export function createBorderProp(defaultSize: string = '', defaultStyle: string = 'solid') {
     return {
@@ -12,41 +12,34 @@ export function createBorderProp(defaultSize: string = '', defaultStyle: string 
         }
     };
 }
-export function useBorder(size : string | 'none' | 'sm' | 'md' | '' | 'lg' | 'xl' , style : string | 'solid' | 'dashed' | 'dotted' | 'double' | 'hidden' | 'none' | '') {
-    const class_name = ref('border-');
-    switch(size) {
-        case 'none': {
-            size = '0';
-            break;
+export function useBorder(props: { borderSize: string; borderStyle: string }) {
+    const class_name = computed(() => {
+        let size = '';
+        switch (props.borderSize) {
+            case 'none':
+                size = '0';
+                break;
+            case 'sm':
+                size = '2';
+                break;
+            case 'md':
+                size = '4';
+                break;
+            case '':
+                size = '0';
+                break;
+            case 'lg':
+                size = '6';
+                break;
+            case 'xl':
+                size = '8';
+                break;
+            default:
+                size = '0';
+                break;
         }
-        case 'sm': {
-            size = '2';
-            break;
-        }
-        case 'md': {
-            size = '4';
-            break;
-        }
-        case '': {
-            size = '0';
-            break;
-        }
-        case 'lg': {
-            size = '6';
-            break;
-        }
-        case 'xl': {
-            size = '8';
-            break;
-        }
-        default: {
-            size = '0';
-            break;
-        }
-    }
-    class_name.value = class_name.value + size;
-    if (style !== ''){
-        class_name.value = class_name.value + '-' + style;
-    }
-        return class_name.value;
+        return `border-${size}${props.borderStyle ? '-' + props.borderStyle : ''}`;
+    });
+    
+    return class_name;
 }
