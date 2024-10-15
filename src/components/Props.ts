@@ -1,6 +1,7 @@
 import { createBorderProp } from "@/composabless/BorderProps";
 import { createRoundedProp } from "@/composabless/RoundedProps";
 import { createSizeProp } from "@/composabless/SizeProps";
+import { createColorProp, createBgColorProp } from "@/composabless/composable";
 
 export const paginationProps = {
     pageSize: { type: Number, default: 20 },
@@ -13,10 +14,8 @@ export const paginationProps = {
 };
 
 export const uiProps = {
-    activeColor: { type: String, default: 'blue-grey-darken-4' },
-    onActiveColor: { type: String, default: 'blue-lighten-5' },
-    activeTextColor: { type: String, default: 'white' },
-    onActiveTextColor: { type: String, default: 'black' },
+    ...createColorProp(),
+    ...createBgColorProp(),
     ...createRoundedProp(),
     ...createSizeProp(),
     ...createBorderProp(),
